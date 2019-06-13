@@ -7,6 +7,10 @@ from openpyxl import load_workbook
 
 
 def judge_rule():
+    '''
+    根据具体的业务规则，标记需要去掉的列
+    :return:
+    '''
     fname = 'Decision_table.xlsx'
     wb = load_workbook(fname)
 
@@ -30,6 +34,10 @@ def judge_rule():
 
 
 def activity_can_use():
+    '''
+    根据具体的业务规则，标记需要去掉的列
+    :return:
+    '''
     fname = 'Decision_table.xlsx'
     wb = load_workbook(fname)
 
@@ -93,10 +101,42 @@ def all_permutation_and_combination(conditional_pile_num, Condition_term_num=2):
 
     return s_list
 
+def duplicate_removal():
+    '''
+    在设计用例的过程中，可能会引入一些中间判定条件，在准备好之后需要将中间条件去掉，那么剩下的就可能会存在重复的情况，需要去重
+    :return:
+    '''
+    fname = 'Decision_table.xlsx'
+    wb = load_workbook(fname)
+
+    sheet = wb['1']
+
+    list_tmp=[]
+
+    # excel行列从1开始
+    for j in range(4, 43):
+        s_tmp = ''
+        for k in range(88,93):
+            item = sheet.cell(row=k, column=j).value
+            s_tmp+=item
+        list_tmp.append(s_tmp)
+
+    #轮询去重
+    for index,s in enumerate(list_tmp):
+        for n in range(index+1,len(list_tmp)):
+            if(s==list_tmp[n]):
+                sheet.cell(row=86, column=4+n, value='重复了')
+
+
+    wb.save(fname)
+    print('保存成功')
+
+
 
 if __name__ == '__main__':
     # s=permutation_and_combination(index=2,conditional_pile_num=3)
     # print('s:',s)
     # all_permutation_and_combination(conditional_pile_num=6)
     # judge_rule()
-    activity_can_use()
+    # activity_can_use()
+    duplicate_removal()
